@@ -29,26 +29,27 @@ class BetelgeuseIO:
         'AMPSPI_CSN': RFMC.ADC.IO_04.Ball,
 
         
-        'T9': RFMC.ADC.IO_05.Ball,
-        'T10': RFMC.ADC.IO_07.Ball,
-        'T11': RFMC.ADC.IO_08.Ball, 
-        'T12': RFMC.ADC.IO_10.Ball, 
-        'P10': RFMC.ADC.IO_11.Ball,
-        'R13': RFMC.ADC.IO_12.Ball,
-        'P12': RFMC.ADC.IO_13.Ball,
-        'P11': RFMC.ADC.IO_14.Ball,
-        'T13': RFMC.ADC.IO_15.Ball,
-        'R14': RFMC.ADC.IO_16.Ball,
-        'T14': RFMC.ADC.IO_17.Ball,
-        'T15': RFMC.ADC.IO_19.Ball,
+        'AMPCH0': RFMC.ADC.IO_05.Ball,
+        'AMPCH1': RFMC.ADC.IO_07.Ball,
+        'AMPCH2': RFMC.ADC.IO_08.Ball, 
+        'AMPCH3': RFMC.ADC.IO_10.Ball, 
+        'AMPCH4': RFMC.ADC.IO_11.Ball,
+        'AMPCH5': RFMC.ADC.IO_12.Ball,
+        'AMPCH6': RFMC.ADC.IO_13.Ball,
+        'AMPCH7': RFMC.ADC.IO_14.Ball,
+        'AMPCS0': RFMC.ADC.IO_15.Ball,
+        'AMPCS1': RFMC.ADC.IO_16.Ball,
+        'AMPCS2': RFMC.ADC.IO_17.Ball,
 
-        'R11': RFMC.DAC.IO_00.Ball,
-        'R9': RFMC.DAC.IO_01.Ball,
-        'R12': RFMC.DAC.IO_02.Ball,
-        'R10': RFMC.DAC.IO_03.Ball,
-        'R8': RFMC.DAC.IO_04.Ball,
-        'P4': RFMC.DAC.IO_05.Ball,
-        'R7': RFMC.DAC.IO_06.Ball,
+        'PWREN0': RFMC.ADC.IO_19.Ball,
+        'PWREN1': RFMC.DAC.IO_00.Ball,
+        'PWREN2': RFMC.DAC.IO_01.Ball,
+        'PWREN3': RFMC.DAC.IO_16.Ball,
+        'PWREN4': RFMC.DAC.IO_03.Ball,
+        'PWREN5': RFMC.DAC.IO_04.Ball,
+        'PWREN6': RFMC.DAC.IO_05.Ball,
+        'PWREN7': RFMC.DAC.IO_06.Ball,
+        
         'R3': RFMC.DAC.IO_07.Ball,
         'P9': RFMC.DAC.IO_08.Ball, 
         'R6': RFMC.DAC.IO_09.Ball, 
@@ -56,7 +57,8 @@ class BetelgeuseIO:
         'R4': RFMC.DAC.IO_11.Ball,
         'P7': RFMC.DAC.IO_13.Ball,
         'T3': RFMC.DAC.IO_14.Ball,
-        'T2': RFMC.DAC.IO_16.Ball,
+        'R12': RFMC.DAC.IO_02.Ball,
+
     }
     
 class Betelgeuse_Capture(BD):
@@ -146,25 +148,35 @@ class Betelgeuse_Capture(BD):
 
         print("Creating GPIO...")
         
-        self.gpio = GPIO(self, "pl_gpio")
+        self.gpio = GPIO(self, "pl_gpio", dual=True)
         self.out_slice32 = Slice32(self, "gpio_slice_out", None)
         self.in_concat32 = Concat32(self, "gpio_concat_in", None)
+        self.out2_slice32 = Slice32(self, "gpio2_slice_out", None)
+        self.in2_concat32 = Concat32(self, "gpio2_concat_in", None)
         
         self.axi_interconnect.aximm.connect(self.gpio.pins["S_AXI"])
         
         self.connect(self.gpio.pins["gpio_io_o"], self.out_slice32.pins["din"])
         self.connect(self.gpio.pins["gpio_io_i"], self.in_concat32.pins["dout"])
+        self.connect(self.gpio.pins["gpio2_io_o"], self.out2_slice32.pins["din"])
+        self.connect(self.gpio.pins["gpio2_io_i"], self.in2_concat32.pins["dout"])
         
-        for i, pin_name in enumerate(['PWR_ENABLE', 'PROGRAMN', 'JTAGEN']):
+        output_pins = [ 'PWR_ENABLE', 'PROGRAMN', 'JTAGEN',
+                        'AMPCH0', 'AMPCH1', 'AMPCH2', 'AMPCH3',
+                        'AMPCH4', 'AMPCH5', 'AMPCH6', 'AMPCH7',
+                        'AMPCS0', 'AMPCS1', 'AMPCS2',
+                        'PWREN0', 'PWREN1', 'PWREN2', 'PWREN3',
+                        'PWREN4', 'PWREN5', 'PWREN6', 'PWREN7',
+                        'R3', 'P9', 'R12', 'R6'
+        ]
+        
+        for i, pin_name in enumerate(output_pins):
             self.reexport(self.out_slice32.pins[f"dout{i}"]).set_phys(self.io.balls[pin_name], "LVCMOS18")
-        
-        for i, pin_name in enumerate(['INITN', 'DONE']):
-            self.reexport(self.in_concat32.pins[f"din{i}"]).set_phys(self.io.balls[pin_name], "LVCMOS18")
 
-
+        for i, pin_name in enumerate(['INITN', 'DONE', 'P8', 'R4', 'P7', 'T3']):
+            self.reexport(self.in2_concat32.pins[f"din{i}"]).set_phys(self.io.balls[pin_name], "LVCMOS18")
         
-        
-        self.capture = SampleCapture(self, NCOFreq="0.0")
+        self.capture = RealSampleCapture(self)
 
         for p in self.capture.external_interfaces:
             port = self.reexport(p)

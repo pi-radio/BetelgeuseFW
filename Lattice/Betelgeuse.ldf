@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<BaliProject version="3.2" title="Betelgeuse" device="LCMXO3LF-9400E-6BG256C" default_implementation="BG1">
+<BaliProject version="3.2" title="Betelgeuse" device="LCMXO3LF-9400C-6BG256C" default_implementation="BG1">
     <Options/>
     <Implementation title="BG1" dir="BG1" description="BG1" synthesis="lse" default_strategy="Strategy1">
-        <Options def_top="BetelgeuseTop" top="BetelgeuseTop"/>
+        <Options def_top="system_spi_subordinate" top="BetelgeuseTop"/>
         <Source name="BGTop.v" type="Verilog" type_short="Verilog">
             <Options top_module="BetelgeuseTop"/>
         </Source>
@@ -13,6 +13,15 @@
             <Options/>
         </Source>
         <Source name="system_spi_subordinate.v" type="Verilog" type_short="Verilog">
+            <Options/>
+        </Source>
+        <Source name="tb.v" type="Verilog" type_short="Verilog" syn_sim="SimOnly">
+            <Options/>
+        </Source>
+        <Source name="BG1/BG1.xcf" type="Programming Project File" type_short="Programming">
+            <Options/>
+        </Source>
+        <Source name="BGSim/BGSim.spf" type="Simulation Project File" type_short="SPF">
             <Options/>
         </Source>
         <Source name="Betelgeuse.lpf" type="Logic Preference" type_short="LPF">

@@ -88,7 +88,7 @@ module system_spi_subordinate
 	wb_write_data <= 8'b0;
 	reg_addr <= 3'b0;
 
-	spi_regs[`REG_PWR_EN] = 8'b0;
+	spi_regs[`REG_PWR_EN] = 8'hFF;
 	spi_regs[`REG_LEDS] = 8'b0;
 	spi_regs[`REG_AMPCHAN] = 8'b0;
 	spi_regs[`REG_AMPCS] = 8'b0;
