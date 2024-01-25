@@ -1,0 +1,5 @@
+#!/bin/bash
+
+: ${PIRADIP_DIR:=../../PiRadIP}
+
+${PIRADIP_DIR}/build $@
