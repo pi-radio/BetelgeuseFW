@@ -90,7 +90,6 @@ class Betelgeuse_Capture(BD):
     def __init__(self, t, name):
         super().__init__(t, name)
 
-
         print("Creating Zynq UltraScale(TM) Processing System cell...")
                 
         self.ps = Zynq_US_PS(self, "ps")
@@ -109,7 +108,6 @@ class Betelgeuse_Capture(BD):
         
         self.axi_interconnect.pins["S00_AXI"].connect(self.ps.pins["M_AXI_HPM0_FPD"])
         self.axi_interconnect.pins["S01_AXI"].connect(self.ps.pins["M_AXI_HPM1_FPD"])
-
                 
         print("Ceating Control AXI SPI...")
 
@@ -176,24 +174,11 @@ class Betelgeuse_Capture(BD):
         for i, pin_name in enumerate(['INITN', 'DONE', 'P8', 'R4', 'P7', 'T3']):
             self.reexport(self.in2_concat32.pins[f"din{i}"]).set_phys(self.io.balls[pin_name], "LVCMOS18")
 
-        tx_samples = [ 128 * 1024,
-                       128 * 1024,
-                       128 * 1024,
-                       128 * 1024,
-                       128 * 1024,
-                       128 * 1024,
-                       128 * 1024,
-                       128 * 1024 ]
+        NSAMPLES = 64 * 1024
+            
+        tx_samples = [ NSAMPLES ] * 8
 
-        rx_samples = [ 128 * 1024,
-                       128 * 1024,
-                       128 * 1024,
-                       128 * 1024,
-                       128 * 1024,
-                       128 * 1024,
-                       128 * 1024,
-                       128 * 1024 ]
-
+        rx_samples = [ NSAMPLES ] * 8
         
         self.capture = RealSampleCapture(self, tx_samples=tx_samples, rx_samples=rx_samples, sample_freq=4096e6)
 
