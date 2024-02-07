@@ -1,0 +1,139 @@
+&pl_gpio {
+	 gpio-line-names = 
+	   "PWR_ENABLE", "PROGRAMN", "JTAGEN", "AMPCH0",
+	   "AMPCH1", "AMPCH2", "AMPCH3", "AMPCH4",
+	   "AMPCH5", "AMPCH6", "AMPCH7", "AMPCS0",
+	   "AMPCS1", "AMPCS2", "PWREN0", "PWREN1",
+	   "PWREN2", "PWREN3", "PWREN4", "PWREN5",
+	   "PWREN6", "PWREN7", "R3", "P9",
+	   "R12", "R6", "", "",
+	   "", "", "", "",
+
+	   "INITN", "DONE", "P8", "R4",
+	   "P7", "T3", "", "",
+	   "", "", "", "",
+	   "", "", "", "",
+	   "", "", "", "",
+	   "", "", "", "",
+	   "", "", "", "",
+	   "", "", "", "";
+
+	 xlnx,dout-default = <0x00000006>;
+	 xlnx,all-outputs = <0x00000006>;
+	 xlnx,tri-default = <0xFFC00000>;
+};
+
+&ctrl_spi {
+     CTRL0@0 {
+         compatible = "piradio,bgctrl";
+	 reg = <0>;
+	 spi-max-frequency = <1000000>;
+     };
+};
+
+&amp_spi {
+     AMPS0@0 {
+         compatible = "piradio,amps";
+	 reg = <0>;
+	 spi-max-frequency = <1000000>;
+     };
+};
+
+&data_capture_samples_in0 {
+    sample-direction = "in";
+    sample-buffer-no = <0>;
+};
+
+&data_capture_samples_in1 {
+    sample-direction = "in";
+    sample-buffer-no = <1>;
+};
+
+&data_capture_samples_in2 {
+    sample-direction = "in";
+    sample-buffer-no = <2>;
+};
+
+&data_capture_samples_in3 {
+    sample-direction = "in";
+    sample-buffer-no = <3>;
+};
+
+&data_capture_samples_in4 {
+    sample-direction = "in";
+    sample-buffer-no = <4>;
+};
+
+&data_capture_samples_in5 {
+    sample-direction = "in";
+    sample-buffer-no = <5>;
+};
+
+&data_capture_samples_in6 {
+    sample-direction = "in";
+    sample-buffer-no = <6>;
+};
+
+&data_capture_samples_in7 {
+    sample-direction = "in";
+    sample-buffer-no = <7>;
+};
+
+&data_capture_samples_out0 {
+    sample-direction = "out";
+    sample-buffer-no = <0>;
+};
+
+&data_capture_samples_out1 {
+    sample-direction = "out";
+    sample-buffer-no = <1>;
+};
+
+&data_capture_samples_out2 {
+    sample-direction = "out";
+    sample-buffer-no = <2>;
+};
+
+&data_capture_samples_out3 {
+    sample-direction = "out";
+    sample-buffer-no = <3>;
+};
+
+&data_capture_samples_out4 {
+    sample-direction = "out";
+    sample-buffer-no = <4>;
+};
+
+&data_capture_samples_out5 {
+    sample-direction = "out";
+    sample-buffer-no = <5>;
+};
+
+&data_capture_samples_out6 {
+    sample-direction = "out";
+    sample-buffer-no = <6>;
+};
+
+&data_capture_samples_out7 {
+    sample-direction = "out";
+    sample-buffer-no = <7>;
+};
+
+/ {
+  fragment {
+     target-path = "/";
+     overlay_piradio: __overlay__ {
+       piradio-image = "piradio-Betelgeuse-NRT";
+
+       piradio_nrt {
+	   compatible = "piradio,NRT";
+	   status="okay";
+       };
+
+       piradio_Raman {
+	   compatible = "piradio,Betelgeuse";
+	   status="okay";
+       };
+     };
+  };
+};
