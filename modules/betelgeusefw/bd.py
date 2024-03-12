@@ -16,6 +16,17 @@ class BetelgeuseBD(BD):
 
     io = BetelgeuseIO
 
+    _adc_map = [ 4, 7, 3, 0, 6, 5, 1, 2 ]
+    _dac_map = [ 1, 0, 4, 5, 3, 2, 6, 7 ]
+
+    @property
+    def adc_map(self):
+        return self._adc_map
+    
+    @property
+    def dac_map(self):
+        return self._dac_map
+    
     def create_gpio(self):
         print("Creating GPIO...")
         
@@ -123,11 +134,11 @@ class BetelgeuseBD(BD):
         ]
         
         for i, pin_name in enumerate(output_pins):
-            self.reexport(self.out_slice32.pins[f"dout{i}"]).set_phys(self.io.balls[pin_name], "LVCMOS18")
+            pin = self.out_slice32.get_pin()
+            
+            self.reexport(pin).set_phys(self.io.balls[pin_name], "LVCMOS18")
 
         for i, pin_name in enumerate(['INITN', 'DONE', 'P8', 'R4', 'P7', 'T3']):
-            self.reexport(self.in2_concat32.pins[f"din{i}"]).set_phys(self.io.balls[pin_name], "LVCMOS18")
-
-        # maybe need to move to a separate function?
-        self.ps.connect_interrupts()
-
+            pin = self.in2_concat32.get_pin()
+            
+            self.reexport(pin).set_phys(self.io.balls[pin_name], "LVCMOS18")
